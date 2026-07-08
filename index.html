@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中地理知识整合平台</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/myweb/css/style.css">
+</head>
+<body class="page--home">
+    <!-- ========== 顶部导航栏 ========== -->
+    <header class="header">
+        <div class="header-inner">
+            <a href="/myweb/index.html" class="logo">
+                <span class="logo-icon">🌍</span>
+                <span class="logo-text">高中地理知识整合</span>
+            </a>
+            <nav class="nav" id="mainNav">
+                <a href="/myweb/index.html" class="nav-link active">首页</a>
+                <a href="/myweb/knowledge/nature.html" class="nav-link">自然地理</a>
+                <a href="/myweb/knowledge/humanity.html" class="nav-link" >人文地理</a>
+                <a href="/myweb/knowledge/region.html" class="nav-link">区域地理</a>
+                <a href="/myweb/knowledge/elective.html" class="nav-link">选修专题</a>
+                <a href="/myweb/knowledge/inquiry.html" class="nav-link">综合探究</a>
+                <a href="/myweb/maps.html" class="nav-link">🗺️ 地图</a>
+                <a href="/myweb/login.html" class="nav-link">登录</a>
+                <a href="/myweb/register.html" class="nav-link">注册</a>
+                <a href="https://www.dili360.com" target="_blank" class="nav-link nav-link--external">
+                    📰 中国国家地理
+                </a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="菜单">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+        <!-- 搜索栏 -->
+        <div class="search-bar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索知识点，如：大气环流、城市化..." autocomplete="off">
+                <button id="searchBtn" aria-label="搜索"></button>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== 主内容区 ========== -->
+    <main class="main">
+        <!-- 首页 -->
+        <section class="page--home" id="homePage">
+            <!-- 欢迎横幅 -->
+            <div class="hero">
+                <h1>高中地理知识整合平台</h1>
+                <p>系统梳理四大板块知识，助力高考地理复习</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-num">4</span>
+                        <span class="stat-label">大知识板块</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">20+</span>
+                        <span class="stat-label">核心章节</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">100+</span>
+                        <span class="stat-label">关键知识点</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 板块卡片 -->
+            <div class="modules-grid">
+                <!-- 自然地理 -->
+                <a href="/myweb/knowledge/nature.html" class="module-card module-card--nature">
+                    <div class="module-card__icon">🌋</div>
+                    <h2 class="module-card__title">自然地理</h2>
+                    <p class="module-card__desc">地球运动、大气环流、水循环、地貌与地质作用</p>
+                    <ul class="module-card__topics">
+                        <li>地球与地图</li>
+                        <li>大气环境与气候</li>
+                        <li>水体与水循环</li>
+                        <li>地表形态与地质</li>
+                    </ul>
+                </a>
+                <!-- 人文地理 -->
+                <a href="/myweb/knowledge/humanity.html" class="module-card module-card--humanity">
+                    <div class="module-card__icon">🏙️</div>
+                    <h2 class="module-card__title">人文地理</h2>
+                    <p class="module-card__desc">人口分布、城市空间结构、农业与工业区位</p>
+                    <ul class="module-card__topics">
+                        <li>人口与城市</li>
+                        <li>农业地域类型</li>
+                        <li>工业区位与集聚</li>
+                        <li>交通运输与区位</li>
+                    </ul>
+                </a>
+                <!-- 区域地理 -->
+                <a href="/myweb/knowledge/region.html" class="module-card module-card--region">
+                    <div class="module-card__icon">🗺️</div>
+                    <h2 class="module-card__title">区域地理</h2>
+                    <p class="module-card__desc">中国各区域特征、世界主要地区地理概况</p>
+                    <ul class="module-card__topics">
+                        <li>中国地理分区</li>
+                        <li>世界地理概览</li>
+                        <li>区域可持续发展</li>
+                        <li>地理信息技术</li>
+                    </ul>
+                </a>
+                <!-- 选修专题 -->
+                <a href="/myweb/knowledge/elective.html" class="module-card module-card--elective">
+                    <div class="module-card__icon">🌱</div>
+                    <h2 class="module-card__title">选修专题</h2>
+                    <p class="module-card__desc">自然资源、环境保护、灾害防治与可持续发展</p>
+                    <ul class="module-card__topics">
+                        <li>自然资源与能源</li>
+                        <li>环境污染与治理</li>
+                        <li>自然灾害与防治</li>
+                        <li>生态环境保护</li>
+                    </ul>
+                </a>
+                <!-- 综合探究 -->
+                <a href="/myweb/knowledge/inquiry.html" class="module-card module-card--inquiry">
+                    <div class="module-card__icon">🔬</div>
+                    <h2 class="module-card__title">综合探究</h2>
+                    <p class="module-card__desc">地理计算分析、热点专题探究与实践应用</p>
+                    <ul class="module-card__topics">
+                        <li>地理计算与图表判读</li>
+                        <li>热点专题探究</li>
+                        <li>地理实践与创新</li>
+                    </ul>
+                </a>
+            </div>
+
+            <!-- 高频考点 -->
+            <div class="section-title-row">
+                <h2 class="section-title">🎯 高频考点速查</h2>
+                <a href="/myweb/knowledge/nature.html" class="section-more">查看全部 →</a>
+            </div>
+            <div class="hot-topics-grid">
+                <a href="/myweb/knowledge/nature.html#sec2" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--green">自然</div>
+                    <div class="hot-topic-title">三圈环流与气候类型</div>
+                    <div class="hot-topic-desc">七大气压带、六个风带的分布与移动规律</div>
+                </a>
+                <a href="/myweb/knowledge/humanity.html#sec1" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--orange">人文</div>
+                    <div class="hot-topic-title">城市内部空间结构</div>
+                    <div class="hot-topic-desc">商业区、住宅区、工业区的分布规律</div>
+                </a>
+                <a href="/myweb/knowledge/region.html#sec1" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--blue">区域</div>
+                    <div class="hot-topic-title">中国三大自然区</div>
+                    <div class="hot-topic-desc">东部季风区、西北干旱区、青藏高寒区</div>
+                </a>
+                <a href="/myweb/knowledge/elective.html#sec3" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--purple">选修</div>
+                    <div class="hot-topic-title">自然灾害与防治</div>
+                    <div class="hot-topic-desc">台风、暴雨、地震、滑坡、泥石流的成因</div>
+                </a>
+                <a href="/myweb/knowledge/nature.html#sec3" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--green">自然</div>
+                    <div class="hot-topic-title">洋流分布规律</div>
+                    <div class="hot-topic-desc">副热带环流、渔场形成、对气候的影响</div>
+                </a>
+                <a href="/myweb/knowledge/humanity.html#sec2" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--orange">人文</div>
+                    <div class="hot-topic-title">主要农业地域类型</div>
+                    <div class="hot-topic-desc">季风水田、商品谷物、大牧场放牧业</div>
+                </a>
+                <a href="/myweb/knowledge/region.html#sec4" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--blue">区域</div>
+                    <div class="hot-topic-title">3S技术对比</div>
+                    <div class="hot-topic-desc">RS遥感、GNSS定位、GIS分析的集成应用</div>
+                </a>
+                <a href="/myweb/knowledge/elective.html#sec4" class="hot-topic-card">
+                    <div class="hot-topic-tag hot-topic-tag--purple">选修</div>
+                    <div class="hot-topic-title">区域可持续发展</div>
+                    <div class="hot-topic-desc">资源枯竭型城市转型、流域综合治理</div>
+                </a>
+            </div>
+
+            <!-- 备考指南 -->
+            <div class="section-title-row">
+                <h2 class="section-title">📊 高考地理备考指南</h2>
+            </div>
+            <div class="exam-guide-grid">
+                <div class="exam-guide-card">
+                    <div class="exam-guide-icon">📈</div>
+                    <div class="exam-guide-label">分值占比</div>
+                    <div class="exam-guide-value">约 100 分</div>
+                    <div class="exam-guide-detail">文科综合/地理卷总分</div>
+                </div>
+                <div class="exam-guide-card">
+                    <div class="exam-guide-icon">🧠</div>
+                    <div class="exam-guide-label">核心能力</div>
+                    <div class="exam-guide-value">四项</div>
+                    <div class="exam-guide-detail">获取信息、综合分析、区域定位、综合表述</div>
+                </div>
+                <div class="exam-guide-card">
+                    <div class="exam-guide-icon">📝</div>
+                    <div class="exam-guide-label">题型结构</div>
+                    <div class="exam-guide-value">选择题 + 综合题</div>
+                    <div class="exam-guide-detail">选择题约 44 分，综合题约 56 分</div>
+                </div>
+                <div class="exam-guide-card">
+                    <div class="exam-guide-icon">🗂️</div>
+                    <div class="exam-guide-label">复习建议</div>
+                    <div class="exam-guide-value">三轮复习</div>
+                    <div class="exam-guide-detail">一轮夯实基础 → 二轮专题突破 → 三轮冲刺模拟</div>
+                </div>
+            </div>
+
+            <!-- 知识地图 -->
+            <div class="section-title-row">
+                <h2 class="section-title">🗺️ 知识地图</h2>
+                <a href="/myweb/knowledge/nature.html" class="section-more">进入学习 →</a>
+            </div>
+            <div class="knowledge-map-grid">
+                <div class="km-group km-group--nature">
+                    <div class="km-group-title">自然地理</div>
+                    <div class="km-chapters">
+                        <span class="km-chapter">地球运动</span>
+                        <span class="km-chapter">大气环境</span>
+                        <span class="km-chapter">水体循环</span>
+                        <span class="km-chapter">地表形态</span>
+                        <span class="km-chapter">自然带</span>
+                    </div>
+                </div>
+                <div class="km-group km-group--humanity">
+                    <div class="km-group-title">人文地理</div>
+                    <div class="km-chapters">
+                        <span class="km-chapter">人口城市</span>
+                        <span class="km-chapter">农业地域</span>
+                        <span class="km-chapter">工业区位</span>
+                        <span class="km-chapter">交通服务</span>
+                    </div>
+                </div>
+                <div class="km-group km-group--region">
+                    <div class="km-group-title">区域地理</div>
+                    <div class="km-chapters">
+                        <span class="km-chapter">中国自然</span>
+                        <span class="km-chapter">中国人文</span>
+                        <span class="km-chapter">世界地区</span>
+                        <span class="km-chapter">3S技术</span>
+                    </div>
+                </div>
+                <div class="km-group km-group--elective">
+                    <div class="km-group-title">选修专题</div>
+                    <div class="km-chapters">
+                        <span class="km-chapter">自然资源</span>
+                        <span class="km-chapter">环境污染</span>
+                        <span class="km-chapter">自然灾害</span>
+                        <span class="km-chapter">区域发展</span>
+                        <span class="km-chapter">生态保护</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学习提示 -->
+            <div class="study-tip-banner">
+                <div class="study-tip-icon">💡</div>
+                <div class="study-tip-content">
+                    <div class="study-tip-title">今日学习建议</div>
+                    <div class="study-tip-text">先从<span class="study-tip-highlight">自然地理</span>开始，掌握地球运动和大气环境的基础知识，再逐步拓展到人文与区域地理。每天攻克 2-3 个知识点，坚持就是胜利！</div>
+                </div>
+            </div>
+
+            <!-- 中国国家地理快捷通道 -->
+            <div class="channel-banner">
+                <div class="channel-banner__content">
+                    <div class="channel-banner__info">
+                        <h3>📰 中国国家地理通道</h3>
+                        <p>拓展视野 · 深度探索 · 了解中国地理之美</p>
+                    </div>
+                    <div class="channel-banner__actions">
+                        <a href="https://www.dili360.com" target="_blank" class="btn btn--primary">
+                            访问中国国家地理
+                        </a>
+                        <a href="https://www.nmg.com.cn" target="_blank" class="btn btn--outline">
+                            内蒙古自然地理
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========== 页脚 ========== -->
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>高中地理知识整合平台 &copy; 2026</p>
+            <p class="footer-links">
+                <a href="https://www.dili360.com" target="_blank">中国国家地理</a> |
+                <a href="https://www.nmg.com.cn" target="_blank">内蒙古自然地理</a> |
+                <a href="https://www.cgnpc.org.cn" target="_blank">中国地理学会</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="/myweb/js/data.js"></script>
+    <script src="/myweb/js/app.js"></script>
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

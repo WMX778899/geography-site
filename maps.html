@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界地形与气候图 - 高中地理知识整合</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/myweb/css/style.css">
+    <style>
+        body.page--maps {
+            background:
+                linear-gradient(180deg, rgba(240, 248, 255, 0.9) 0%, rgba(229, 242, 250, 0.86) 100%),
+                url('/myweb/images/background-region-world.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: #eff8fb;
+        }
+
+        .maps-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 24px 48px;
+        }
+
+        .maps-hero {
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 34px 24px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(232, 248, 251, 0.94));
+            border: 1px solid rgba(26, 122, 109, 0.12);
+            box-shadow: 0 18px 50px rgba(15, 82, 93, 0.14);
+        }
+
+        .maps-hero__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(26, 122, 109, 0.1);
+            color: #1a7a6d;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+
+        .maps-hero h1 {
+            margin: 0 0 12px;
+            color: #145a52;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+        }
+
+        .maps-hero p {
+            max-width: 760px;
+            margin: 0 auto;
+            color: #52636f;
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .map-stack {
+            display: grid;
+            gap: 34px;
+        }
+
+        .map-card {
+            overflow: hidden;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.97);
+            border: 1px solid rgba(26, 122, 109, 0.12);
+            box-shadow: 0 18px 54px rgba(20, 90, 82, 0.13);
+        }
+
+        .map-card__header {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 24px 28px;
+            background: linear-gradient(135deg, #1a7a6d, #2f9d86);
+            color: white;
+        }
+
+        .map-card__title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .map-card__icon {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            flex: 0 0 auto;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.18);
+            font-size: 1.8rem;
+        }
+
+        .map-card__title {
+            margin: 0 0 4px;
+            font-size: 1.45rem;
+            font-weight: 800;
+        }
+
+        .map-card__subtitle {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.84);
+            font-size: 0.92rem;
+        }
+
+        .map-card__badge {
+            align-self: flex-start;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            color: white;
+            font-size: 0.86rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .map-card__body {
+            padding: 24px;
+        }
+
+        .map-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 18px;
+            background: #dff7fa;
+            border: 1px solid #cbe9e6;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        }
+
+        .map-frame::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 18%, transparent 82%, rgba(20, 90, 82, 0.08));
+        }
+
+        .map-image {
+            display: block;
+            width: 100%;
+            height: auto;
+            min-height: 280px;
+            object-fit: contain;
+        }
+
+        .map-frame--interactive {
+            cursor: zoom-in;
+        }
+
+        .map-frame--interactive:hover .map-image {
+            filter: saturate(1.04) contrast(1.03);
+        }
+
+        .map-label-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .map-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.78);
+            color: #263238;
+            font-size: clamp(0.62rem, 1.25vw, 0.98rem);
+            font-weight: 800;
+            line-height: 1.2;
+            white-space: nowrap;
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 8px rgba(25, 77, 78, 0.14);
+        }
+
+        .map-label--continent {
+            background: rgba(255, 247, 214, 0.82);
+            color: #b42318;
+            letter-spacing: 0.12em;
+            font-size: clamp(0.76rem, 1.6vw, 1.25rem);
+        }
+
+        .map-label--ocean {
+            background: rgba(219, 249, 255, 0.58);
+            color: #147d91;
+            box-shadow: none;
+        }
+
+        .map-label--feature {
+            background: rgba(255, 255, 255, 0.72);
+            color: #5a3825;
+        }
+
+        .map-label--climate {
+            background: rgba(255, 255, 255, 0.84);
+            color: #263238;
+        }
+
+        .map-zoom-hint {
+            position: absolute;
+            right: 14px;
+            bottom: 14px;
+            z-index: 2;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(20, 90, 82, 0.86);
+            color: white;
+            font-size: 0.84rem;
+            font-weight: 700;
+            pointer-events: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+        }
+
+        .map-frame__fallback {
+            display: none;
+            padding: 64px 24px;
+            color: #52636f;
+            text-align: center;
+        }
+
+        .map-frame.is-error .map-image {
+            display: none;
+        }
+
+        .map-frame.is-error .map-frame__fallback {
+            display: block;
+        }
+
+        .map-info-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.9fr;
+            gap: 20px;
+            margin-top: 22px;
+        }
+
+        .map-note,
+        .map-source,
+        .map-points {
+            border-radius: 16px;
+            background: #f5fbfa;
+            border: 1px solid #d9eeeb;
+            padding: 18px;
+        }
+
+        .map-note h3,
+        .map-source h3,
+        .map-points h3 {
+            margin: 0 0 10px;
+            color: #145a52;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .map-note p,
+        .map-source p {
+            margin: 0;
+            color: #52636f;
+            line-height: 1.75;
+            font-size: 0.95rem;
+        }
+
+        .map-points ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .map-points li {
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: white;
+            border: 1px solid #cbe9e6;
+            color: #2f4a50;
+            font-size: 0.88rem;
+        }
+
+        .map-source a,
+        .study-panel a {
+            color: #1a7a6d;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .map-source a:hover,
+        .study-panel a:hover {
+            text-decoration: underline;
+        }
+
+        .map-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .map-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: white;
+            border: 1px solid #cbe9e6;
+            color: #1a7a6d;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .map-action:hover {
+            background: #ecf8f6;
+            color: #145a52;
+        }
+
+        .climate-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 10px;
+            border-radius: 12px;
+            background: white;
+            border: 1px solid #d9eeeb;
+            color: #2f4a50;
+            font-size: 0.88rem;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+
+        .climate-a { background: #1f9b4f; }
+        .climate-b { background: #e8c356; }
+        .climate-c { background: #8acbe8; }
+        .climate-d { background: #8a69bd; }
+        .climate-e { background: #f2f2f2; }
+
+        .study-panel {
+            margin-top: 34px;
+            padding: 24px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.94);
+            border: 1px solid rgba(26, 122, 109, 0.12);
+            box-shadow: 0 14px 38px rgba(20, 90, 82, 0.1);
+        }
+
+        .study-panel h2 {
+            margin: 0 0 14px;
+            color: #145a52;
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .study-panel p {
+            margin: 0 0 10px;
+            color: #52636f;
+            line-height: 1.75;
+        }
+
+        .study-panel p:last-child {
+            margin-bottom: 0;
+        }
+
+        .map-viewer {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            grid-template-rows: auto 1fr auto;
+            background: rgba(5, 20, 24, 0.94);
+            color: white;
+        }
+
+        .map-viewer.is-open {
+            display: grid;
+        }
+
+        .map-viewer__bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 14px 18px;
+            background: rgba(4, 32, 34, 0.92);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .map-viewer__title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .map-viewer__tools {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .map-viewer__button {
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            padding: 7px 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .map-viewer__button:hover {
+            background: rgba(255, 255, 255, 0.22);
+        }
+
+        .map-viewer__stage {
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .map-viewer__stage.is-dragging {
+            cursor: grabbing;
+        }
+
+        .map-viewer__canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .map-viewer__image {
+            display: block;
+            max-width: min(92vw, 1800px);
+            max-height: 78vh;
+            user-select: none;
+            -webkit-user-drag: none;
+            border-radius: 10px;
+            box-shadow: 0 22px 70px rgba(0, 0, 0, 0.45);
+        }
+
+        .map-viewer__help {
+            padding: 10px 18px;
+            background: rgba(4, 32, 34, 0.92);
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 0.86rem;
+            text-align: center;
+        }
+
+        body.viewer-open {
+            overflow: hidden;
+        }
+
+        @media (max-width: 900px) {
+            .map-card__header,
+            .map-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-card__header {
+                display: grid;
+            }
+
+            .map-card__badge {
+                justify-self: start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .maps-container {
+                padding: 20px 14px 36px;
+            }
+
+            .maps-hero {
+                padding: 26px 18px;
+            }
+
+            .map-card__header,
+            .map-card__body {
+                padding: 18px;
+            }
+
+            .map-card__title-wrap {
+                align-items: flex-start;
+            }
+
+            .map-card__icon {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="page--maps">
+    <header class="header">
+        <div class="header-inner">
+            <a href="/myweb/index.html" class="logo">
+                <span class="logo-icon">🌍</span>
+                <span class="logo-text">高中地理知识整合</span>
+            </a>
+            <nav class="nav" id="mainNav">
+                <a href="/myweb/index.html" class="nav-link">首页</a>
+                <a href="/myweb/knowledge/nature.html" class="nav-link">自然地理</a>
+                <a href="/myweb/knowledge/humanity.html" class="nav-link">人文地理</a>
+                <a href="/myweb/knowledge/region.html" class="nav-link">区域地理</a>
+                <a href="/myweb/knowledge/elective.html" class="nav-link">选修专题</a>
+                <a href="/myweb/knowledge/inquiry.html" class="nav-link">综合探究</a>
+                <a href="/myweb/maps.html" class="nav-link active">🗺️ 地图</a>
+                <a href="/myweb/login.html" class="nav-link">登录</a>
+                <a href="/myweb/register.html" class="nav-link">注册</a>
+                <a href="https://www.dili360.com" target="_blank" class="nav-link nav-link--external">📰 中国国家地理</a>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="菜单"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="maps-container">
+            <section class="maps-hero">
+                <div class="maps-hero__eyebrow">🧭 世界地图专题</div>
+                <h1>世界地形图与世界气候图</h1>
+                <p>采用网上公开地图资源并保存到本地，呈现接近教材挂图的完整世界地图效果，便于观察大洲大洋、主要地形区与全球气候类型分布。</p>
+            </section>
+
+            <div class="map-stack">
+                <article class="map-card">
+                    <div class="map-card__header">
+                        <div class="map-card__title-wrap">
+                            <span class="map-card__icon">⛰️</span>
+                            <div>
+                                <h2 class="map-card__title">世界地形图</h2>
+                                <p class="map-card__subtitle">观察海陆轮廓、山脉高原、平原盆地与海底地形</p>
+                            </div>
+                        </div>
+                        <span class="map-card__badge">Physical Map</span>
+                    </div>
+                    <div class="map-card__body">
+                        <div class="map-frame map-frame--interactive" data-viewer-src="/myweb/images/world-physical-map.jpg" data-viewer-title="世界地形图">
+                            <img class="map-image" src="/myweb/images/world-physical-map.jpg" alt="世界地形图，显示全球陆地地形起伏和海洋深度" loading="lazy" onerror="this.closest('.map-frame').classList.add('is-error')">
+                            <div class="map-label-layer" aria-hidden="true">
+                                <span class="map-label map-label--continent" style="left: 24%; top: 28%;">欧洲</span>
+                                <span class="map-label map-label--continent" style="left: 33%; top: 42%;">亚洲</span>
+                                <span class="map-label map-label--continent" style="left: 21%; top: 55%;">非洲</span>
+                                <span class="map-label map-label--continent" style="left: 77%; top: 32%;">北美洲</span>
+                                <span class="map-label map-label--continent" style="left: 76%; top: 67%;">南美洲</span>
+                                <span class="map-label map-label--continent" style="left: 55%; top: 72%;">大洋洲</span>
+                                <span class="map-label map-label--continent" style="left: 50%; top: 90%;">南极洲</span>
+                                <span class="map-label map-label--ocean" style="left: 50%; top: 48%;">太平洋</span>
+                                <span class="map-label map-label--ocean" style="left: 38%; top: 72%;">印度洋</span>
+                                <span class="map-label map-label--ocean" style="left: 13%; top: 43%;">大西洋</span>
+                                <span class="map-label map-label--feature" style="left: 36%; top: 39%;">青藏高原</span>
+                                <span class="map-label map-label--feature" style="left: 37%; top: 43%;">喜马拉雅山脉</span>
+                                <span class="map-label map-label--feature" style="left: 78%; top: 57%;">安第斯山脉</span>
+                                <span class="map-label map-label--feature" style="left: 73%; top: 35%;">落基山脉</span>
+                                <span class="map-label map-label--feature" style="left: 20%; top: 47%;">撒哈拉沙漠</span>
+                                <span class="map-label map-label--feature" style="left: 75%; top: 61%;">亚马孙平原</span>
+                            </div>
+                            <span class="map-zoom-hint">点击全屏 · 滚轮缩放</span>
+                            <div class="map-frame__fallback">世界地形图加载失败，请检查 <code>/myweb/images/world-physical-map.jpg</code> 是否存在。</div>
+                        </div>
+
+                        <div class="map-info-grid">
+                            <div class="map-note">
+                                <h3>读图重点</h3>
+                                <p>先看大洲和大洋位置，再沿板块边界寻找高大山系；把青藏高原、安第斯山脉、落基山脉、东非高原等地形区与气候、河流、人口分布联系起来。</p>
+                                <div class="map-actions">
+                                    <a class="map-action" href="/myweb/images/world-physical-map.jpg" target="_blank" rel="noopener">🔍 打开大图</a>
+                                    <a class="map-action" href="/myweb/knowledge/region.html" target="_blank" rel="noopener">📖 区域地理</a>
+                                </div>
+                            </div>
+                            <div class="map-points">
+                                <h3>核心地形</h3>
+                                <ul>
+                                    <li>喜马拉雅山脉</li>
+                                    <li>青藏高原</li>
+                                    <li>安第斯山脉</li>
+                                    <li>落基山脉</li>
+                                    <li>亚马孙平原</li>
+                                    <li>撒哈拉沙漠</li>
+                                    <li>刚果盆地</li>
+                                    <li>西西伯利亚平原</li>
+                                </ul>
+                            </div>
+                        </div>                    </div>
+                </article>
+
+                <article class="map-card">
+                    <div class="map-card__header">
+                        <div class="map-card__title-wrap">
+                            <span class="map-card__icon">🌡️</span>
+                            <div>
+                                <h2 class="map-card__title">世界气候图</h2>
+                                <p class="map-card__subtitle">按柯本—盖革气候分类展示全球主要气候类型</p>
+                            </div>
+                        </div>
+                        <span class="map-card__badge">Köppen-Geiger</span>
+                    </div>
+                    <div class="map-card__body">
+                        <div class="map-frame map-frame--interactive" data-viewer-src="/myweb/images/world-climate-map.png" data-viewer-title="世界气候图">
+                            <img class="map-image" src="/myweb/images/world-climate-map.png" alt="世界气候图，显示全球柯本—盖革气候分类分布" loading="lazy" onerror="this.closest('.map-frame').classList.add('is-error')">
+                            <div class="map-label-layer" aria-hidden="true">
+                                <span class="map-label map-label--climate" style="left: 29%; top: 48%;">热带沙漠气候</span>
+                                <span class="map-label map-label--climate" style="left: 24%; top: 58%;">热带草原气候</span>
+                                <span class="map-label map-label--climate" style="left: 32%; top: 58%;">热带雨林气候</span>
+                                <span class="map-label map-label--climate" style="left: 33%; top: 37%;">温带大陆性气候</span>
+                                <span class="map-label map-label--climate" style="left: 16%; top: 36%;">温带海洋性气候</span>
+                                <span class="map-label map-label--climate" style="left: 21%; top: 41%;">地中海气候</span>
+                                <span class="map-label map-label--climate" style="left: 42%; top: 46%;">季风气候</span>
+                                <span class="map-label map-label--climate" style="left: 72%; top: 31%;">寒带气候</span>
+                                <span class="map-label map-label--climate" style="left: 73%; top: 58%;">热带雨林气候</span>
+                                <span class="map-label map-label--climate" style="left: 56%; top: 68%;">热带沙漠气候</span>
+                            </div>
+                            <span class="map-zoom-hint">点击全屏 · 滚轮缩放</span>
+                            <div class="map-frame__fallback">世界气候图加载失败，请检查 <code>/myweb/images/world-climate-map.png</code> 是否存在。</div>
+                        </div>
+
+                        <div class="climate-legend" aria-label="气候类型图例">
+                            <div class="legend-item"><span class="legend-color climate-a"></span><span>A 热带气候</span></div>
+                            <div class="legend-item"><span class="legend-color climate-b"></span><span>B 干旱气候</span></div>
+                            <div class="legend-item"><span class="legend-color climate-c"></span><span>C 温带气候</span></div>
+                            <div class="legend-item"><span class="legend-color climate-d"></span><span>D 大陆性气候</span></div>
+                            <div class="legend-item"><span class="legend-color climate-e"></span><span>E 极地气候</span></div>
+                        </div>
+
+                        <div class="map-info-grid">
+                            <div class="map-note">
+                                <h3>读图重点</h3>
+                                <p>横向比较纬度地带性，纵向比较海陆位置差异；重点理解热带雨林、热带草原、热带沙漠、温带海洋性、温带大陆性、地中海气候的成因和分布。</p>
+                                <div class="map-actions">
+                                    <a class="map-action" href="/myweb/images/world-climate-map.png" target="_blank" rel="noopener">🔍 打开大图</a>
+                                    <a class="map-action" href="/myweb/knowledge/nature.html#sec5" target="_blank" rel="noopener">📖 自然带规律</a>
+                                </div>
+                            </div>
+                            <div class="map-points">
+                                <h3>复习抓手</h3>
+                                <ul>
+                                    <li>赤道低压带</li>
+                                    <li>副热带高压带</li>
+                                    <li>信风与西风</li>
+                                    <li>季风环流</li>
+                                    <li>寒暖流影响</li>
+                                    <li>地形雨</li>
+                                    <li>海陆热力差异</li>
+                                    <li>自然带更替</li>
+                                </ul>
+                            </div>
+                        </div>                    </div>
+                </article>
+            </div>
+
+            <section class="study-panel">
+                <h2>📚 相关学习资源</h2>
+                <p><strong>配套知识：</strong><a href="/myweb/knowledge/nature.html#sec2">三圈环流与气压带风带</a> · <a href="/myweb/knowledge/nature.html#sec5">自然带与地域分异规律</a> · <a href="/myweb/knowledge/region.html">区域地理特征分析</a></p>
+                <p><strong>学习方法：</strong>先用地形图定位“高山、高原、平原、盆地”，再用气候图解释“热量、降水、植被、农业与人口分布”的区域差异。</p>
+            </section>
+        </div>
+    </main>
+
+    <div class="map-viewer" id="mapViewer" aria-hidden="true">
+        <div class="map-viewer__bar">
+            <h2 class="map-viewer__title" id="mapViewerTitle">地图查看</h2>
+            <div class="map-viewer__tools">
+                <button class="map-viewer__button" type="button" data-viewer-action="zoom-out">－ 缩小</button>
+                <button class="map-viewer__button" type="button" data-viewer-action="zoom-in">＋ 放大</button>
+                <button class="map-viewer__button" type="button" data-viewer-action="reset">重置</button>
+                <button class="map-viewer__button" type="button" data-viewer-action="close">关闭</button>
+            </div>
+        </div>
+        <div class="map-viewer__stage" id="mapViewerStage">
+            <div class="map-viewer__canvas" id="mapViewerCanvas">
+                <img class="map-viewer__image" id="mapViewerImage" src="" alt="">
+            </div>
+        </div>
+        <div class="map-viewer__help">操作提示：滚轮缩放，按住拖拽平移，双击放大，按 Esc 关闭。</div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>高中地理知识整合平台 © 2026</p>
+            <p class="footer-links">
+                <a href="https://www.dili360.com" target="_blank" rel="noopener">中国国家地理</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="/myweb/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const mapViewer = document.getElementById('mapViewer');
+        const mapViewerTitle = document.getElementById('mapViewerTitle');
+        const mapViewerStage = document.getElementById('mapViewerStage');
+        const mapViewerCanvas = document.getElementById('mapViewerCanvas');
+        const mapViewerImage = document.getElementById('mapViewerImage');
+        let viewerScale = 1;
+        let viewerX = 0;
+        let viewerY = 0;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+
+        function updateViewerTransform() {
+            mapViewerCanvas.style.transform = `translate(calc(-50% + ${viewerX}px), calc(-50% + ${viewerY}px)) scale(${viewerScale})`;
+        }
+
+        function resetViewer() {
+            viewerScale = 1;
+            viewerX = 0;
+            viewerY = 0;
+            updateViewerTransform();
+        }
+
+        function openViewer(src, title, alt) {
+            mapViewerImage.src = src;
+            mapViewerImage.alt = alt;
+            mapViewerTitle.textContent = title;
+            mapViewer.classList.add('is-open');
+            mapViewer.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('viewer-open');
+            resetViewer();
+        }
+
+        function closeViewer() {
+            mapViewer.classList.remove('is-open');
+            mapViewer.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('viewer-open');
+            isDragging = false;
+            mapViewerStage.classList.remove('is-dragging');
+        }
+
+        function zoomViewer(delta, originX = 0, originY = 0) {
+            const previousScale = viewerScale;
+            viewerScale = Math.min(5, Math.max(0.65, viewerScale + delta));
+            const scaleRatio = viewerScale / previousScale;
+            viewerX = originX - (originX - viewerX) * scaleRatio;
+            viewerY = originY - (originY - viewerY) * scaleRatio;
+            updateViewerTransform();
+        }
+
+        document.querySelectorAll('.map-frame--interactive').forEach(frame => {
+            frame.addEventListener('click', event => {
+                if (event.target.closest('a')) return;
+                const image = frame.querySelector('.map-image');
+                openViewer(frame.dataset.viewerSrc, frame.dataset.viewerTitle, image.alt);
+            });
+        });
+
+        mapViewer.addEventListener('click', event => {
+            const action = event.target.dataset.viewerAction;
+            if (!action) return;
+            if (action === 'close') closeViewer();
+            if (action === 'reset') resetViewer();
+            if (action === 'zoom-in') zoomViewer(0.35);
+            if (action === 'zoom-out') zoomViewer(-0.35);
+        });
+
+        mapViewerStage.addEventListener('wheel', event => {
+            event.preventDefault();
+            const rect = mapViewerStage.getBoundingClientRect();
+            const originX = event.clientX - rect.left - rect.width / 2;
+            const originY = event.clientY - rect.top - rect.height / 2;
+            zoomViewer(event.deltaY < 0 ? 0.28 : -0.28, originX, originY);
+        }, { passive: false });
+
+        mapViewerStage.addEventListener('dblclick', event => {
+            const rect = mapViewerStage.getBoundingClientRect();
+            const originX = event.clientX - rect.left - rect.width / 2;
+            const originY = event.clientY - rect.top - rect.height / 2;
+            zoomViewer(0.55, originX, originY);
+        });
+
+        mapViewerStage.addEventListener('pointerdown', event => {
+            isDragging = true;
+            dragStartX = event.clientX - viewerX;
+            dragStartY = event.clientY - viewerY;
+            mapViewerStage.classList.add('is-dragging');
+            mapViewerStage.setPointerCapture(event.pointerId);
+        });
+
+        mapViewerStage.addEventListener('pointermove', event => {
+            if (!isDragging) return;
+            viewerX = event.clientX - dragStartX;
+            viewerY = event.clientY - dragStartY;
+            updateViewerTransform();
+        });
+
+        function stopDragging(event) {
+            isDragging = false;
+            mapViewerStage.classList.remove('is-dragging');
+            if (event.pointerId && mapViewerStage.hasPointerCapture(event.pointerId)) {
+                mapViewerStage.releasePointerCapture(event.pointerId);
+            }
+        }
+
+        mapViewerStage.addEventListener('pointerup', stopDragging);
+        mapViewerStage.addEventListener('pointercancel', stopDragging);
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && mapViewer.classList.contains('is-open')) {
+                closeViewer();
+            }
+        });
+    </script>
+</body>
+</html>

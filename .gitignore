@@ -1,0 +1,11 @@
+node_modules/
+package-lock.json
+package.json
+server.js
+start.bat
+check-nature.js
+fix-gbk.js
+*.md
+*.png
+*.jpg
+*.jpeg
